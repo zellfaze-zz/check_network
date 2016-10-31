@@ -3,6 +3,7 @@
 #include <sys/stat.h>
 #include <fstream>
 #include <string>
+#include <arpa/inet.h>
 
 using namespace std;
 
@@ -15,6 +16,7 @@ void toggleTmp(string s_tmpFile);
 string callPing(string s_pingTmpFile, string address = "8.8.8.8", int wait = 4);
 void findDirectories(char* c_tmpDir, string* s_tmpFile, string* s_pingTmpFile);
 void readConfig(string* address, int* wait);
+bool validateIP(string address);
 
 int main(int argc, char *argv[])
 {
@@ -121,7 +123,8 @@ void readConfig(string* address, int* wait) {
         if (config.is_open()) {
             if (getline(config,line)) {
                 if (line.size() > 0) {
-                    *address = line;
+                    if (validateIP(string(line)))
+                        *address = line;
                 }
 
                 if (getline(config,line)) {
@@ -133,4 +136,13 @@ void readConfig(string* address, int* wait) {
             config.close();
         }
     }
+}
+
+bool validateIP(string address) {
+    struct sockaddr_in sa;
+    int result = inet_pton(AF_INET, address.c_str(), &(sa.sin_addr));
+    if (result == 1)
+        return true;
+    else
+        return false;
 }
