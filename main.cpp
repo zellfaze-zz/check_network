@@ -12,9 +12,9 @@ inline bool exists(const std::string& name) {
 }
 
 void toggleTmp(string s_tmpFile);
-//string callPing(string s_pingTmpFile);
-void findDirectories(char* c_tmpDir, string* s_tmpFile, string* s_pingTmpFile);
 string callPing(string s_pingTmpFile, string address = "8.8.8.8", int wait = 4);
+void findDirectories(char* c_tmpDir, string* s_tmpFile, string* s_pingTmpFile);
+void readConfig(string* address, int* wait);
 
 int main(int argc, char *argv[])
 {
@@ -22,9 +22,14 @@ int main(int argc, char *argv[])
     char* c_tmpDir = {};
     string(s_tmpFile);
     string(s_pingTmpFile);
+    string(s_address);
+    int wait;
 
     //Find tmp directory
     findDirectories(c_tmpDir, &s_tmpFile, &s_pingTmpFile);
+
+    //Read config
+    readConfig(&s_address, &wait);
 
     //Check options
     if (argc > 1) {
@@ -41,7 +46,7 @@ int main(int argc, char *argv[])
     } else {
         //Check if we should call ping
         if (exists(s_tmpFile))
-            cout << callPing(s_pingTmpFile);
+            cout << callPing(s_pingTmpFile, s_address, wait);
         else
             cout << "Off";
     }
@@ -98,4 +103,34 @@ void findDirectories(char* c_tmpDir, string* s_tmpFile, string* s_pingTmpFile) {
 
     *s_tmpFile = string(c_tmpDir) + "/" + string(c_username) + *s_tmpFile;
     *s_pingTmpFile = string(c_tmpDir) + "/" + string(c_username) + *s_pingTmpFile;
+}
+
+void readConfig(string* address, int* wait) {
+    char* c_home;
+    c_home = getenv("HOME");
+    string s_configFile = string(c_home) + "/.check_network";
+
+    //Set them to the default for now
+    *address = "8.8.8.8";
+    *wait = 4;
+
+    //Read the config file
+    string line;
+    if (exists(s_configFile)) {
+        ifstream config(s_configFile.c_str());
+        if (config.is_open()) {
+            if (getline(config,line)) {
+                if (line.size() > 0) {
+                    *address = line;
+                }
+
+                if (getline(config,line)) {
+                    if (line.size() > 0) {
+                        *wait = stoi(line);
+                    }
+                }
+            }
+            config.close();
+        }
+    }
 }
