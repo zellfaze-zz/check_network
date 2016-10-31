@@ -7,8 +7,11 @@ It is designed to be used in XFCE's panel.
 
 ##Installation
 
-Download the executable from /bin/Release (or build it yourself) and place it
-somewhere on your computer.
+First you will need to download the software, you can either download the
+[source](https://github.com/zellfaze/check_network/archive/master.zip) (and
+build yourself), download the
+[binary](https://github.com/zellfaze/check_network/raw/master/bin/Release/check_network),
+or download the [.deb package](https://github.com/zellfaze/check_network_pkg/raw/master/check-network_1.0-1_amd64.deb).
 
 On your XFCE panel add a new Launcher item.  Have this launcher button run
 `check_network -t`. Now next to the Launcher item create a new Generic Monitor
