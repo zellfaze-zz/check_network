@@ -33,6 +33,10 @@ int main(int argc, char *argv[])
     if (argc > 1) {
         if (string(argv[1]) == "-t")
             toggleMode = true;
+        if ((string(argv[1]) == "-h")) {
+            cout << "Use with -t option to toggle on and off." << endl;
+            cout << "Used without any option will return ping if on." << endl;
+        }
     }
 
     if (toggleMode) {
