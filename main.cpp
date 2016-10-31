@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <sys/stat.h>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -11,13 +12,14 @@ inline bool exists(const std::string& name) {
 }
 
 void toggleTmp(string s_tmpFile);
-string callPing(string s_pingTmpFile);
+//string callPing(string s_pingTmpFile);
 void findDirectories(char* c_tmpDir, string* s_tmpFile, string* s_pingTmpFile);
+string callPing(string s_pingTmpFile, string address = "8.8.8.8", int wait = 4);
 
 int main(int argc, char *argv[])
 {
     bool toggleMode = false;
-    char* c_tmpDir;
+    char* c_tmpDir = {};
     string(s_tmpFile);
     string(s_pingTmpFile);
 
@@ -60,9 +62,9 @@ void toggleTmp(string s_tmpFile) {
     }
 }
 
-string callPing(string s_pingTmpFile) {
+string callPing(string s_pingTmpFile, string address, int wait) {
     //Call our ping command
-    string s_pingCmd = "ping -c 1 -w 4 8.8.8.8 | grep time= | sed 's/.*time=//' > " + s_pingTmpFile;
+    string s_pingCmd = "ping -c 1 -w " + std::to_string(wait) + " " + address + " | grep time= | sed 's/.*time=//' > " + s_pingTmpFile;
     string s_rmCmd = "rm " + s_pingTmpFile;
     system(s_pingCmd.c_str());
 
